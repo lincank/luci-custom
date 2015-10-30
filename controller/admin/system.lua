@@ -1,7 +1,7 @@
 module("luci.controller.admin.system", package.seeall)
 
 function index()
-	entry({"admin", "system"}, template("admin_system/index"), _("WiFi设置"), 20).index = true
+	entry({"admin", "system"}, cbi("admin_system/admin"), _("路由器设置"), 50).index = true
 --	entry({"admin", "system", "system"}, cbi("admin_system/system"), _("System"), 1)
 --	entry({"admin", "system", "clock_status"}, call("action_clock_status"))
 --

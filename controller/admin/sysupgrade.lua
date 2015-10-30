@@ -15,6 +15,6 @@ You may obtain a copy of the License at
 module("luci.controller.admin.sysupgrade", package.seeall)
 
 function index()
-	entry({"admin", "sysupgrade"}, template("admin_network/index"), _("系统更新"), 80).index = true
+	entry({"admin", "sysupgrade"}, template("admin_sysupgrade/index"), _("系统更新"), 80).index = true
 end
 
