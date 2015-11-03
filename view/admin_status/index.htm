@@ -1,3 +1,16 @@
+<%#
+LuCI - Lua Configuration Interface
+Copyright 2008 Steven Barth <steven@midlink.org>
+Copyright 2008-2011 Jo-Philipp Wich <xm@subsignal.org>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+-%>
+
 <%
 	require "luci.fs"
 	require "luci.tools.status"
@@ -166,51 +179,6 @@
 				si.innerHTML = '<img src="<%=resource%>/icons/ethernet_disabled.png" /><br /><small>?</small>';
 				ss.innerHTML = '<em><%:Not connected%></em>';
 			}
-
-			<% if has_ipv6 then %>
-			var si6 = document.getElementById('wan6_i');
-			var ss6 = document.getElementById('wan6_s');
-			var ifc6 = info.wan6;
-
-			if (ifc6 && ifc6.ifname && ifc6.proto != 'none')
-			{
-				var s = String.format(
-					'<strong><%:Address%>: </strong>%s<br />' +
-					'<strong><%:Gateway%>: </strong>%s<br />',
-						(ifc6.ip6addr) ? ifc6.ip6addr : '::',
-						(ifc6.gw6addr) ? ifc6.gw6addr : '::'
-				);
-
-				for (var i = 0; i < ifc6.dns.length; i++)
-				{
-					s += String.format(
-						'<strong><%:DNS%> %d: </strong>%s<br />',
-						i + 1, ifc6.dns[i]
-					);
-				}
-
-				if (ifc6.uptime > 0)
-				{
-					s += String.format(
-						'<strong><%:Connected%>: </strong>%t<br />',
-						ifc6.uptime
-					);
-				}
-
-				ss6.innerHTML = String.format('<small>%s</small>', s);
-				si6.innerHTML = String.format(
-					'<img src="<%=resource%>/icons/ethernet.png" />' +
-					'<br /><small><a href="%s">%s</a></small>',
-						ifc6.link, ifc6.ifname
-				);
-			}
-			else
-			{
-				si6.innerHTML = '<img src="<%=resource%>/icons/ethernet_disabled.png" /><br /><small>?</small>';
-				ss6.innerHTML = '<em><%:Not connected%></em>';
-			}
-			<% end %>
-
 			<% if has_dsl then %>
 				var dsl_i = document.getElementById('dsl_i');
 				var dsl_s = document.getElementById('dsl_s');
@@ -542,7 +510,6 @@
 //]]></script>
 
 <h2><a id="content" name="content"><%:Status%></a></h2>
-
 <fieldset class="cbi-section">
 	<legend><%:Network%></legend>
 
@@ -555,7 +522,6 @@
 		</td></tr>
 	</table>
 </fieldset>
-
 <% if has_wifi then %>
 <fieldset class="cbi-section">
 	<legend><%:Wireless%></legend>
@@ -584,15 +550,16 @@
 	</table>
 </fieldset>
 
-
 <fieldset class="cbi-section">
-	<legend><%:Wireless%></legend>
+	<legend><%:VIP%></legend>
 
-	<table id="wifi_status_table" width="100%" cellspacing="10">
+	<table id="i" width="100%" cellspacing="10">
 		<tr><td><em>
-<a href="http://haiguiwifi.com/xufei?macaddr=<%= luci.sys.exec("ifconfig wlan0 | grep "HWaddr" | awk '{print $5}' ") %>">
-<button type="button"> Click Me!</button>
-</a>
+					<button class="cbi-button cbi-button-apply" type="button">
+						<a style='text-decoration:none;' href='http://haiguiwifi.com/xufei?macaddr=<%= luci.sys.exec("ifconfig wlan0 | grep HWaddr | awk '{print $5}' ") %>'>
+							Vip me!
+						</a>
+					</button>
 </em></td></tr>
 	</table>
 </fieldset>

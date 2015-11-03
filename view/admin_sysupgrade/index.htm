@@ -1,5 +1,19 @@
 
 <%+header%>
 
-sss
+<fieldset class="cbi-section">
+	<legend><%:VIP%></legend>
+
+	<table id="i" width="100%" cellspacing="10">
+		<tr><td><em>
+					<button class="cbi-button cbi-button-apply" type="button">
+						<a style='text-decoration:none;' href='http://haiguiwifi.com/sysupgrade?macaddr=<%= luci.sys.exec("ifconfig wlan0 | grep HWaddr | awk '{print $5}' ") %>'>
+							Upgrade!
+						</a>
+					</button>
+</em></td></tr>
+	</table>
+</fieldset>
+
+
 <%+footer%>

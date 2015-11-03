@@ -34,8 +34,13 @@ function index()
 	entry({"admin", "services"}, firstchild(), _("Services"), 40).index = true
 
 	entry({"admin", "logout"}, call("action_logout"), _("Logout"), 90)
+	entry({"admin", "one_click"}, call("one_Click"), _("一键检测"), 85)
 end
 
+function one_Click()
+      luci.util.exec("/etc/init.d/jc.shell")
+      luci.http.redirect(luci.dispatcher.build_url("admin", "status", "overview"))
+end
 function action_logout()
 	local dsp = require "luci.dispatcher"
 	local sauth = require "luci.sauth"
