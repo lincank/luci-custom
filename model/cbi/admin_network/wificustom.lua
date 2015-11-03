@@ -28,7 +28,7 @@ function m.on_commit(map)
 
 	if v1 and v2 and #v1 > 7 and #v2 > 7 then
 		if v1 == v2 then
-			if luci.sys.exec("uci set wireless.@wifi-iface[0].ssid=" .. "'" .. SSID .. "'" .. " && uci set wireless.@wifi-iface[0].key=" .. "'" .. v1 .. "'" .. "&& uci commit && echo ok") == 'ok\n' then
+			if luci.sys.exec("uci set wireless.@wifi-iface[0].ssid='"  .. SSID .. "' && uci set wireless.@wifi-iface[0].key='" .. v1 .. "'&& uci commit && echo ok") == 'ok\n' then
 				m.message = translate("Password or SSID successfully changed!")
 			else
 				m.message = translate(" password LENGTH must be greater than  8 !")
