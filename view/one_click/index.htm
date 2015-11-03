@@ -13,16 +13,10 @@ $Id$
 
 -%>
 <%+header%>
-<h2><a id="content" name="content"><%:Update%></a></h2>
-<h3><%:Upgrade%></h3>
-<p><%:Upgrade the operating system of your device%></p>
+<h2><a id="content" name="content">检测</a></h2>
+<h3><%:Testing%></h3>
+<p><%:Testing the operating system of your device%></p>
 <%-
-local c = require("luci.model.uci").cursor():changes()
-if c and next(c) then
--%>
-	<p class="warning"><%:Warning: There are unsaved changes that will be lost while upgrading!%></p> 
-<%-
-end
 if not reboot then 
 -%>
 <p><a href="<%=controller%>/admin/sysupgrade?reboot=1"><%:Perform Upgrade%></a></p>

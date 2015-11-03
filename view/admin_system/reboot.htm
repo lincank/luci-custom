@@ -27,7 +27,12 @@ if not reboot then
 -%>
 <p><a href="<%=controller%>/admin/system/reboot?reboot=1"><%:Perform reboot%></a></p>
 <%- else -%>
-<p><%:Please wait: Device rebooting...%></p>
-<script type="text/javascript">setTimeout("location='<%=controller%>/admin'", 60000)</script>
+<p><%:Please wait<span id='counter'></span>: Device rebooting...%></p>
+<script type="text/javascript">
+var count = 60, timer = setInterval(function() {
+    $("#counter").html(count--);
+    if(count == 1) clearInterval(timer);
+}, 1000);
+setTimeout("location='<%=controller%>/admin'", 60000)</script>
 <%- end -%>
 <%+footer%>

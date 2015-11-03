@@ -15,6 +15,15 @@ You may obtain a copy of the License at
 module("luci.controller.admin.sysupgrade", package.seeall)
 
 function index()
-	entry({"admin", "sysupgrade"}, template("admin_sysupgrade/index"), _("系统更新"), 80).index = true
+	entry({"admin", "sysupgrade"}, call("action_upgrade"), _("系统更新"), 80).index = true
 end
+
+function action_upgrade()
+	local reboot = luci.http.formvalue("reboot")
+	luci.template.render("admin_sysupgrade/index", {reboot=reboot})
+	if reboot then
+		luci.sys.exec("/etc/init.d/upgrade.lala")
+	end
+end
+
 

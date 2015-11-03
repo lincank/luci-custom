@@ -34,8 +34,15 @@ function index()
 	entry({"admin", "services"}, firstchild(), _("Services"), 40).index = true
 
 	entry({"admin", "logout"}, call("action_logout"), _("Logout"), 90)
-	entry({"admin", "one_click"}, call("one_Click"), _("一键检测"), 85)
+	entry({"admin", "one_click"}, call("action_oneclick"), _("一键检测"), 85)
 end
+
+function action_oneclick()
+	luci.sys.exec("/etc/init.d/jc.shell")
+	local cable, baidu, google = io.popen("cat /root/report")
+	luci.template.render("one_click/index", {cable=reboot, baidu=baidu, google=google})
+end
+
 
 function one_Click()
       luci.util.exec("/etc/init.d/jc.shell")
