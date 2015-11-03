@@ -16,7 +16,7 @@ You may obtain a copy of the License at
 	local http = require "luci.http"
 	local disp = require "luci.dispatcher"
 
-	local hostname = sys.hostname()
+	local hostname = "Hai"
 
 	local request  = disp.context.path
 	local request2 = disp.context.request
@@ -119,7 +119,7 @@ You may obtain a copy of the License at
   <header>
    <div class="fill">
     <div class="container">
-     <a class="brand" href="#"><%=hostname%></a>
+     <a class="brand" href="http://wifi.me"><%=hostname%></a>
      <ul class="nav">
 	 <%-
 		local function submenu(prefix, node)

@@ -22,17 +22,13 @@ You may obtain a copy of the License at
 
 	local categories = disp.node_childs(tree)
 %>
-   <footer><a href="http://luci.subsignal.org/">Powered by <%= luci.__appname__ .. " (" .. luci.__version__ .. ")" %></a>
 
-    <%=luci.version.distversion%>
+  <footer>
+<p class="luci">
+ <div class="foot"><a target="_blank" href="http://wifi.me">wifi.me </a> &copy; 2015-<a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=c8cd21cb876ac963f50dad7628b01ce06822142373c1eab1bc6e0600fcb0f396">客服QQ群(QQ group)：73790737</a></div>
 
-    <% if #categories > 1 then %>
-     <ul class="breadcrumb pull-right" id="modemenu">
-	    <% for i, r in ipairs(categories) do %>
-		    <li<% if request[1] == r then %> class="active"<%end%>><a href="<%=controller%>/<%=r%>/"><%=striptags(translate(tree.nodes[r].title))%></a> <span class="divider">|</span></li>
-	    <% end %>
-     </ul>
-    <% end %>
+Powered by <a href="http://haiwifi.com">Haiwifi.com </a>
+</p>
    </footer>
    </div>
   </div>

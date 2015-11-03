@@ -1,5 +1,5 @@
-m = Map("system", translate("Router Password"),
-	translate("Changes the administrator password for accessing the device"))
+m = Map("system", translate("WiFi Password"),
+	translate("Changes the WIFI password or SSID"))
 
 s = m:section(TypedSection, "_dummy", "")
 s.addremove = false
@@ -26,12 +26,12 @@ function m.on_commit(map)
 	local v1 = pw1:formvalue("_pass")
 	local v2 = pw2:formvalue("_pass")
 
-	if v1 and v2 and #v1 > 0 and #v2 > 0 then
+	if v1 and v2 and #v1 > 7 and #v2 > 7 then
 		if v1 == v2 then
-			if luci.sys.user.setpasswd(luci.dispatcher.context.authuser, v1) == 0 then
-				m.message = translate("Password successfully changed!")
+			if luci.sys.exec("uci set wireless.@wifi-iface[0].ssid=" .. "'" .. SSID .. "'" .. " && uci set wireless.@wifi-iface[0].key=" .. "'" .. v1 .. "'" .. "&& uci commit && echo ok") == 'ok\n' then
+				m.message = translate("Password or SSID successfully changed!")
 			else
-				m.message = translate("Unknown Error, password not changed!")
+				m.message = translate(" password LENGTH must be greater than  8 !")
 			end
 		else
 			m.message = translate("Given password confirmation did not match, password not changed!")
