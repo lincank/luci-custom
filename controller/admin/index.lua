@@ -38,16 +38,19 @@ function index()
 end
 
 function action_oneclick()
-	luci.sys.exec("/etc/init.d/jc.shell")
-	local cable, baidu, google = io.popen("cat /root/report")
-	luci.template.render("one_click/index", {cable=reboot, baidu=baidu, google=google})
+	local preform = luci.http.formvalue("perform")
+	if preform then
+  	luci.sys.exec("/etc/init.d/jc.shell")
+  	 m = io.popen("cat /root/report")
+  	 cable = m:read() or "something wrong,try again"
+  	 baidu = m:read() or " something wrong, try again"
+  	 google = m:read() or "NO"
+		m:close()
+  end
+	luci.template.render("one_click/index", {cable=cable, baidu=baidu, google=google})
 end
 
 
-function one_Click()
-      luci.util.exec("/etc/init.d/jc.shell")
-      luci.http.redirect(luci.dispatcher.build_url("admin", "status", "overview"))
-end
 function action_logout()
 	local dsp = require "luci.dispatcher"
 	local sauth = require "luci.sauth"

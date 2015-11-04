@@ -1,5 +1,5 @@
 m = Map("system", translate("WiFi Password"),
-	translate("Changes the WIFI password or SSID, you can change each other independently.  Password length must greater than 8"))
+	translate("Changes the WIFI password or SSID, you can change each other independently.  Password length must be greater than 8"))
 
 s = m:section(TypedSection, "_dummy", "")
 s.addremove = false
@@ -7,10 +7,12 @@ s.anonymous = true
 
 sd = s:option(Value, "ssid", translate("WiFi name (SSID)"))
 
+placehold = s:option(Flag,"enable",translate("Change wifi Name and Password together"))
+
 pw1 = s:option(Value, "pw1", translate("Password"))
 pw1.password = true
 
-pw2 = s:option(Value, "pw2", translate("Confirmation"))
+pw2 = s:option(Value, "pw2", translate("Password Confirmation"))
 pw2.password = true
 
 function s.cfgsections()

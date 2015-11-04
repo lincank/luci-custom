@@ -1,33 +1,56 @@
-<%#
-LuCI - Lua Configuration Interface
-Copyright 2008 Steven Barth <steven@midlink.org>
-Copyright 2008 Jo-Philipp Wich <xm@leipzig.freifunk.net>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-	http://www.apache.org/licenses/LICENSE-2.0
-
-$Id$
-
--%>
 <%+header%>
 <h2><a id="content" name="content">检测</a></h2>
 <h3><%:Testing%></h3>
 <p><%:Testing the operating system of your device%></p>
-<%-
-if not reboot then 
--%>
-<p><a href="<%=controller%>/admin/sysupgrade?reboot=1"><%:Perform Upgrade%></a></p>
-<%- else -%>
-<p><%:Please wait: Device Upgrading...%></p>
-<script type="text/javascript">
-var count = 60, timer = setInterval(function() {
-	    $("#counter").html(count--);
-			    if(count == 1) clearInterval(timer);
-}, 1000);
+<p><a id="perform" class="cbi-button cbi-button-apply" href="<%=controller%>/admin/one_click?perform=1"><%:Perform Testing%></a></p>
 
-</script>
-<%- end -%>
+<fieldset class="cbi-section">
+	<legend><%:Cable%></legend>
+
+	<table width="100%" cellspacing="10">
+		<tr><td width="33%" style="vertical-align:top">网线连接是否正常</td><td>
+			<table><tr>
+					<td class="test_result" style="vertical-align:middle; padding: 3px"><em><%= cable or '尚未检测，单击“Perform Testing”开始检测'%></em></td>
+			</tr></table>
+		</td></tr>
+	</table>
+</fieldset>
+
+
+<fieldset class="cbi-section">
+	<legend><%:China Network%></legend>
+
+	<table width="100%" cellspacing="10">
+		<tr><td width="33%" style="vertical-align:top">国内网站是否正常</td><td>
+			<table><tr>
+					<td class="test_result" style="vertical-align:middle; padding: 3px"><em><%= baidu or '尚未检测，单击“Perform Testing”开始检测'%></em></td>
+			</tr></table>
+		</td></tr>
+	</table>
+</fieldset>
+
+
+<fieldset class="cbi-section">
+	<legend><%:Outside Network%></legend>
+
+	<table width="100%" cellspacing="10">
+		<tr><td width="33%" style="vertical-align:top">国外网站是否正常</td><td>
+			<table><tr>
+					<td class="test_result" style="vertical-align:middle; padding: 3px"><em><%= google or '尚未检测，单击“Perform Testing”开始检测'%></em></td>
+			</tr></table>
+		</td></tr>
+	</table>
+</fieldset>
+    <script type="text/javascript">
+        var btnClick = document.getElementById('perform');
+        btnClick.onclick = function showMessage() {
+            alert('This could take some time, be patient');  
+						this.style.display='none';
+						var class_array = document.getElementsByClassName('test_result'); 
+						for (var i=0; i < 3; i++)
+						{
+						  class_array[i].innerHTML= '<span id="download"> Testing ... </sapn>';
+						}
+        };
+    </script>
 <%+footer%>

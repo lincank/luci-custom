@@ -27,13 +27,28 @@ if not reboot then
 -%>
 <p><a href="<%=controller%>/admin/sysupgrade?reboot=1"><%:Perform Upgrade%></a></p>
 <%- else -%>
-<p><%:Please wait: Device Upgrading...%></p>
-<script type="text/javascript">
-var count = 60, timer = setInterval(function() {
-	    $("#counter").html(count--);
-			    if(count == 1) clearInterval(timer);
-}, 1000);
+<p><%:Please wait: Device Upgrading...%></p><span id="download"> System Upgraded</span>
 
+
+<script type="text/javascript">
+
+var downloadButton = document.getElementById("download");
+var counter = 120;
+var newElement = document.createElement("p");
+newElement.innerHTML = "Waiting";
+var id;
+
+downloadButton.parentNode.replaceChild(newElement, downloadButton);
+
+id = setInterval(function() {
+    counter--;
+    if(counter < 0) {
+        newElement.parentNode.replaceChild(downloadButton, newElement);
+        clearInterval(id);
+    } else {
+        newElement.innerHTML = "Your upgrading will be finished in" + counter.toString() + " seconds.";
+    }
+}, 1000);
 </script>
 <%- end -%>
 <%+footer%>
