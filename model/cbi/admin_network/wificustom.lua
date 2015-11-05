@@ -26,11 +26,14 @@ function m.on_commit(map)
 	local sok = 'not'
 	local pok = 'not'
 
-	if SSID then
+	if #SSID > 0 then
 		luci.sys.exec("uci set wireless.@wifi-iface[0].ssid='" .. SSID .. "' && uci commit")
 		sok = 'ok'
 	else
 		m.message = translate("SSID NOT changed!! SSID cannot be blank!")
+		if #v1 > 7 then
+			sok = 'ok'
+		end
 	end
 
 	if v1 == v2 and #v1 >7 then
