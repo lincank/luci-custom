@@ -35,16 +35,28 @@ function index()
 
 	entry({"admin", "logout"}, call("action_logout"), _("Logout"), 90)
 	entry({"admin", "one_click"}, call("action_oneclick"), _("一键检测"), 85)
+	entry({"admin", "migrate_server"}, call("action_migrate_server"), _("切换服务器"), 87)
 end
+
+function action_migrate_server()
+	local preform = luci.http.formvalue("perform")
+	if preform then
+  	origin_url = luci.sys.exec("mpw turn")
+		url = string.gsub(origin_url, '+', '%%2B')
+	  return luci.http.redirect('http://http://service.penewave.com/' .. url)
+  end
+	luci.template.render("migrate_server/index")
+end
+
 
 function action_oneclick()
 	local preform = luci.http.formvalue("perform")
 	if preform then
   	luci.sys.exec("/etc/init.d/jc.shell")
-  	 m = io.popen("cat /root/report")
-  	 cable = m:read() or "something wrong,try again"
-  	 baidu = m:read() or " something wrong, try again"
-  	 google = m:read() or "NO"
+  	m = io.popen("cat /root/report")
+  	cable = m:read() or "something wrong,try again"
+  	baidu = m:read() or " something wrong, try again"
+  	google = m:read() or "NO"
 		m:close()
   end
 	luci.template.render("one_click/index", {cable=cable, baidu=baidu, google=google})

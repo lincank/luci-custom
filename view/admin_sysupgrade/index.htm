@@ -25,15 +25,15 @@ if c and next(c) then
 end
 if not reboot then 
 -%>
-<p><a href="<%=controller%>/admin/sysupgrade?reboot=1"><%:Perform Upgrade%></a></p>
+<p><a class="cbi-button cbi-button-apply" href="<%=controller%>/admin/sysupgrade?reboot=1"><%:Perform Upgrade%></a></p>
 <%- else -%>
-<p><%:Please wait: Device Upgrading...%></p><span id="download"> System Upgraded</span>
+<p><%:Please wait: %></p><span id="download"> System Upgraded</span>
 
 
 <script type="text/javascript">
 
 var downloadButton = document.getElementById("download");
-var counter = 120;
+var counter = 5;
 var newElement = document.createElement("p");
 newElement.innerHTML = "Waiting";
 var id;
