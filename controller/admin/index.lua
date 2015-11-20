@@ -38,16 +38,94 @@ function index()
 	entry({"admin", "migrate_server"}, call("action_migrate_server"), _("切换服务器"), 87)
 end
 
-function action_migrate_server()
-	local preform = luci.http.formvalue("perform")
-	if preform then
-  	origin_url = luci.sys.exec("mpw turn")
-		url = string.gsub(origin_url, '+', '%%2B')
-	  return luci.http.redirect('http://http://service.penewave.com/' .. url)
-  end
-	luci.template.render("migrate_server/index")
-end
 
+function action_migrate_server()
+
+	function mac()
+  	return luci.sys.exec("ifconfig eth0.1 | grep HWaddr | awk '{print $5}'")
+	end
+
+	function reset_vpn_info(five_params_table)
+		-- ip, port, net, mode, token = ...
+		local t = five_params_table
+		if type(t) == 'table' then
+		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].server='" .. t[1] .. "'")
+		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].port='" .. t[2] .. "'")
+		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].net='" .. t[3] .. "'")
+		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].user_token='" .. t[5] .. "'")
+		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].route_mode_save='" .. t[4] .. "'")
+		  luci.sys.exec("uci commit") 
+		  luci.sys.exec("/etc/init.d/shadowvpn restart ") 
+			return 'yes'
+		end
+		return 'no'
+	end
+
+	function digest_aes()
+  	return luci.sys.exec("mpw turn")                           -- generate digest
+	end
+
+	function adjust_return_info(info_from_server)
+		  local origin_string = luci.sys.exec("mpw turn  " .. info_from_server) -- TODO dec the digest, waiting gengCheng
+			local r_t = {}
+			local j = 1
+			for i in string.gmatch(s,'[^,]+') do
+				r_t[j] = i
+				j = j + 1
+			end
+			if j == 5 then
+				return r_t
+			end
+			return 'something wrong'
+	end
+
+	function json_2_table(json_string)
+		local mm = require('luci.json')
+		local j_s = json_string
+		local raw_table = mm.decode(j_s)
+		return raw_table
+	end
+
+	function clean_respond_content(raw_return_info)
+		local count = 0
+		local t = {}
+		for i in string.gmatch(r,'[^%c]+') do
+			count= count + 1
+			t[count] = i
+		end
+		if count > 1 then
+			return t[2]
+		end
+		return raw_return_info
+	end
+
+	local update_list = luci.http.formvalue("step_one")
+	local submit_fm = luci.http.formvalue("step_two")
+	local server_url = 'http://service.penewave.com/migrate_server'
+	local httpc = require('luci.httpclient')
+	local list = {}
+
+
+	if update_list and #update_list > 0 then
+		_, _, list_origin = httpc.request_raw(server_url, { body = { digest = digest_aes(), macaddr = mac() } })
+		list = json_2_table(list_origin)
+		if type(list) == 'table' then
+	    return luci.template.render('migrate_server/index', { display_form = 'yes', server_list = list })
+		end
+    return luci.template.render('migrate_server/index', { display_form = 'no', is_worked = 'no' })
+  end
+
+	if submit_fm and #submit_fm >0 then
+	  local chosen_one = luci.http.formvalue("chosen_one")
+		_, _, raw_return_info = httpc.request_raw(server_url, { body = { digest = digest_aes(), macaddr = mac(), server_id = chosen_one } })
+
+		return_info = clean_respond_content(raw_return_info)
+		status = reset_vpn_info(adjust_return_info(return_info)) 
+	  return luci.template.render('migrate_server/index', { is_worked = status, server = list[chosen_one] })
+  end
+
+	luci.template.render("migrate_server/index", { display_js = 'yes' })
+end
 
 function action_oneclick()
 	local preform = luci.http.formvalue("perform")

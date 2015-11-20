@@ -49,7 +49,10 @@
 						var class_array = document.getElementsByClassName('test_result'); 
 						for (var i=0; i < 3; i++)
 						{
-						  class_array[i].innerHTML= '<span id="download"> Testing ... </sapn>';
+      				class_array[i].innerHTML =
+      				'<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> ' +
+      				'<%:Waiting for command to complete...%>'
+      			;
 						}
         };
     </script>
