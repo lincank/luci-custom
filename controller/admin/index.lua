@@ -52,8 +52,9 @@ function action_migrate_server()
 		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].server='" .. t[1] .. "'")
 		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].port='" .. t[2] .. "'")
 		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].net='" .. t[3] .. "'")
-		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].user_token='" .. t[5] .. "'")
 		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].route_mode_save='" .. t[4] .. "'")
+		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].password='" .. t[5] .. "'")
+		  luci.sys.exec("uci set shadowvpn.@shadowvpn[0].user_token='" .. t[6] .. "'")
 		  luci.sys.exec("uci commit") 
 		  luci.sys.exec("/etc/init.d/shadowvpn restart ") 
 			return 'yes'
@@ -66,14 +67,18 @@ function action_migrate_server()
 	end
 
 	function adjust_return_info(info_from_server)
-		  local origin_string = luci.sys.exec("mpw turn  " .. info_from_server) -- TODO dec the digest, waiting gengCheng
+--		  local origin_string = luci.sys.exec("mpw turn  " .. info_from_server) -- TODO dec the digest, need a c wrapper
+		  local key  = luci.sys.exec("mpw")  -- TODO need c wrapper
+			local iv = '01234567891011121314151617181920' -- TODO need c wrapper
+			local dec_s = luci.sys.exec("echo  " .. info_from_server .. " | openssl aes-256-cbc -d -a -K " .. key .. "  -iv  " .. iv ) -- TODO c wrapper 
+			
 			local r_t = {}
 			local j = 1
-			for i in string.gmatch(s,'[^,]+') do
+			for i in string.gmatch(dec_s,'[^,]+') do
 				r_t[j] = i
 				j = j + 1
 			end
-			if j == 5 then
+			if j == 6 then
 				return r_t
 			end
 			return 'something wrong'
